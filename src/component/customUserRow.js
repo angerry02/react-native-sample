@@ -7,9 +7,7 @@ import { View,
     Alert} from 'react-native';
 
 const CustomRow = ({ name, email }) => (
-    <TouchableOpacity
-        onPress={()=> Alert.alert(name)}>
-        <View style={styles.container}>
+    <View style={styles.container}>
             <Image source={{ uri: 'https://mpng.subpng.com/20180411/rzw/kisspng-user-profile-computer-icons-user-interface-mystique-5aceb0245aa097.2885333015234949483712.jpg' }} style={styles.photo} />
             <View style={styles.container_text}>
                 <Text style={styles.name}>
@@ -20,7 +18,6 @@ const CustomRow = ({ name, email }) => (
                 </Text>
             </View>
         </View>
-    </TouchableOpacity>
 );
 
 export default CustomRow;

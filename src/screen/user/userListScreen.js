@@ -4,31 +4,27 @@ import { View,
     Button,
     FlatList,
     StyleSheet,
-    RefreshControl } from 'react-native';
+    RefreshControl,
+    Empty } from 'react-native';
 import { AppContext } from "../../component/appContext";
 
 import LoadingScreen from "../loading/loadingScreen";
 import CustomRow from "../../component/customUserRow";
 
-import { USERS_LIST_API } from "../../utils/api_uri_helper";
+import * as userRepo from "../../Data/user/userRepo";
 
-export default function Users(){
+export default function Users({navigation}){
 
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [users, setUsers] = useState([]);
     const { LoadingUsers, UpdateUsersCount } = React.useContext(AppContext);
 
-    const getUsers = async () => {
+    const fetchUsers = async () => {
         try {
-            const response = await fetch(USERS_LIST_API);
-            const data = await response.json();
+            const data = await userRepo.getUsers();
             setUsers(data);
-
             UpdateUsersCount(data.length);
-
-            //console.log(data);
-
         } catch (error) {
           console.error(error);
         }
@@ -39,14 +35,12 @@ export default function Users(){
       };
 
     useEffect(() => {
-        getUsers();
+        fetchUsers();
     }, []);
-
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        getUsers();
-        //wait(2000).then(() => setRefreshing(false));
+        fetchUsers();
       }, []);
 
     if(isLoading){
@@ -70,6 +64,7 @@ export default function Users(){
                         name={item.name}
                         email={item.email}
                     />}
+                    ListEmptyComponent={<Empty message="No data found." />}
                 />
             </View>
         );
