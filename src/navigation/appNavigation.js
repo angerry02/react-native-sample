@@ -49,9 +49,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => state;
+/*const mapStateToProps = state => state;
 const mapDispatchToProps = dispatch => ({
     updateUsers: users => dispatch({type: actionTypes.UPDATE_USERS, users: users})
 });
 const connectComponent = connect(mapStateToProps, mapDispatchToProps);
-export default connectComponent(AppNavigation);
+export default connectComponent(AppNavigation);*/
+
+const mapStateToProps = state => state;
+export default connect(mapStateToProps)(AppNavigation);
