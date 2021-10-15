@@ -6,28 +6,25 @@ import { View,
     StyleSheet,
     RefreshControl,
     Empty } from 'react-native';
+import { AppContext } from "../../component/appContext";
 
 import LoadingScreen from "../loading/loadingScreen";
 import CustomRow from "../../component/customUserRow";
 
 import * as userRepo from "../../data/user/userRepo";
 
-import * as actions from '../../redux/actions';
-import { connect } from 'react-redux';
+export default function Users({navigation}){
 
-const Users = (props) => {
-    
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [users, setUsers] = useState([]);
+    const { LoadingUsers, UpdateUsersCount } = React.useContext(AppContext);
 
     const fetchUsers = async () => {
         try {
             const data = await userRepo.getUsers();
-
-            props.updateUsers(data);
-
-            console.log('data: ', data.length);
-
+            setUsers(data);
+            UpdateUsersCount(data.length);
         } catch (error) {
           console.error(error);
         }
@@ -39,11 +36,9 @@ const Users = (props) => {
 
     useEffect(() => {
         fetchUsers();
-
-        console.log('rederede....');
     }, []);
 
-    onRefresh = React.useCallback(() => {
+    const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         fetchUsers();
       }, []);
@@ -63,11 +58,11 @@ const Users = (props) => {
                         />
                       }
                     keyExtractor={item => item.id.toString()}
-                    data={props.users}
+                    data={users}
                     renderItem={({ item }) => 
                     <CustomRow
-                        user={item}
-                        props={props}
+                        name={item.name}
+                        email={item.email}
                     />}
                     ListEmptyComponent={
                         ()=>{
@@ -91,18 +86,3 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 });
-
-const mapStateToProps = state => state;
-const mapDispatchToProps = dispatch => ({
-    updateUsers: users => dispatch(actions.updateUsers(users)),
-    updateUsersCount: ctr => dispatch(actions.updateUsersCount(ctr))
-});
-const connectComponent = connect(mapStateToProps, mapDispatchToProps);
-export default connectComponent(Users);
-
-/* 
-const mapStateToProps = (state, props) => {
-    return { amount: state.counter.amount };
-  }
-export default connect(mapStateToProps)(SimpleCounter);
-*/

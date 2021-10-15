@@ -1,0 +1,1 @@
+export const BorderColor = '#00008b'
